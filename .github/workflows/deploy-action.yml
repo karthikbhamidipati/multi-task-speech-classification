@@ -17,10 +17,8 @@ jobs:
         with:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           known_hosts: ${{ secrets.KNOWN_HOSTS }}
-      - name: Temp
-        run: pwd
       - name: List repo contents
-        run: ls -ltrh ~/work/multi-task-speech-classification
+        run: ls -ltrh ~/work/multi-task-speech-classification/*
 #      - name: Deploy with rsync
 #        run: rsync -avz ./dist/ ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:${{ secrets.DEPLOY_DIR }}/multi-task-speech-classification
 
