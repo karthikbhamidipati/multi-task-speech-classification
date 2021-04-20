@@ -15,5 +15,5 @@ jobs:
         with:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
       - name: Deploy with rsync
-        run: rsync -avz ./multi-task-speech-classification/ ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:${{ DEPLOY_DIR }}/multi-task-speech-classification
+        run: rsync -avz ./multi-task-speech-classification/ ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:${{ secrets.DEPLOY_DIR }}/multi-task-speech-classification
 
