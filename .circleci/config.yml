@@ -1,8 +1,0 @@
-version: 2.1
-
-deployment:
-  production:
-    branch: main
-    commands:
-      - ssh-keyscan ${HOST_NAME} >> ~/.ssh/known_hosts
-      - scp -r multi-task-speech-classification/ ${USER_NAME}@${HOST_NAME}:${HOME_DIR}/multi-task-speech-classification/
