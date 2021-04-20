@@ -1,18 +1,8 @@
 version: 2.1
 
-orbs:
-  python: circleci/python@0.2.1
-
-jobs:
-  build-and-test:
-    executor: python/default
-    steps:
-      - checkout
-      - python/load-cache
-      - python/install-deps
-      - python/save-cache
-
-workflows:
-  main:
-    jobs:
-      - build-and-test
+deployment:
+  production:
+    branch: main
+    commands:
+      - ssh-keyscan ${HOST_NAME} >> ~/.ssh/known_hosts
+      - scp -r multi-task-speech-classification/ ${USER_NAME}@${HOST_NAME}:${HOME_DIR}/multi-task-speech-classification/
