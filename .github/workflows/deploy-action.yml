@@ -20,4 +20,4 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           known_hosts: ${{ secrets.KNOWN_HOSTS }}
       - name: Deploy with rsync
-        run: rsync -avz --exclude-from={'.*', '__pycache__'} ${{ github.workspace }} ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:${{ secrets.DEPLOY_DIR }}/
+        run: rsync -avz --exclude-from={'.*','__pycache__'} ${{ github.workspace }} ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:${{ secrets.DEPLOY_DIR }}/
