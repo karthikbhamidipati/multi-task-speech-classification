@@ -9,7 +9,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Creating ssh directory
-        run: mkdir -p .ssh
+        run: mkdir -p ~/.ssh
+      - name: Checking ssh directory
+        run: ls -ltrh ~/.ssh
       - name: Adding Known Hosts
         run: ssh-keyscan -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
       - name: Install SSH Key
