@@ -8,19 +8,17 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-#      - name: Creating ssh directory
-#        run: mkdir -p ~/.ssh
-#      - name: Adding Known Hosts
-#        run: ssh-keyscan -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
-#      - name: Install SSH Key
-#        uses: shimataro/ssh-key-action@v2
-#        with:
-#          key: ${{ secrets.SSH_PRIVATE_KEY }}
-#          known_hosts: ${{ secrets.KNOWN_HOSTS }}
       - name: Checkout
         uses: actions/checkout@v2
-      - name: List repo contents
-        run: ls -ltr ${{ github.workspace }}
-#      - name: Deploy with rsync
-#        run: rsync -avz ./dist/ ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:${{ secrets.DEPLOY_DIR }}/multi-task-speech-classification
+      - name: Creating ssh directory
+        run: mkdir -p ~/.ssh
+      - name: Adding Known Hosts
+        run: ssh-keyscan -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
+      - name: Install SSH Key
+        uses: shimataro/ssh-key-action@v2
+        with:
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          known_hosts: ${{ secrets.KNOWN_HOSTS }}
+      - name: Deploy with rsync
+        run: rsync -avz ${{ github.workspace }} ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:${{ secrets.DEPLOY_DIR }}/
 
