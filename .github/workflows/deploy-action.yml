@@ -17,6 +17,10 @@ jobs:
 #        with:
 #          key: ${{ secrets.SSH_PRIVATE_KEY }}
 #          known_hosts: ${{ secrets.KNOWN_HOSTS }}
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          path: main
       - name: List repo contents
         run: ls -ltr ${{ github.workspace }}
 #      - name: Deploy with rsync
