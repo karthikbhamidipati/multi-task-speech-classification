@@ -92,8 +92,7 @@ def preprocess_csv(root_dir):
 
 def extract_features(root_dir):
     # reading the filtered dataframe
-    pre_processed_data_dir = join(root_dir, PRE_PROCESSED_DATA_DIR)
-    common_voice_df = pd.read_csv(join(pre_processed_data_dir, FILTERED_FILE_NAME))
+    common_voice_df = pd.read_csv(join(root_dir, FILTERED_FILE_NAME))
     common_voice_df = common_voice_df.astype(
         {'filename': 'string', 'age': 'category', 'gender': 'category', 'accent': 'category'})
 

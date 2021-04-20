@@ -30,7 +30,7 @@ def train_model(root_dir, model_key):
     # get data_loaders, loss_func, model, optimizer
     data_loaders = get_data_loaders(features, config)
     loss_func = get_loss_function(config, features)
-    model = DataParallel(model_func).to(run_device)
+    model = DataParallel(model_func(config)).to(run_device)
     optimizer = Adam(model.parameters(), lr=config.learning_rate)
 
     # set wandb to watch model parameters
@@ -39,6 +39,9 @@ def train_model(root_dir, model_key):
 
     # begin training
     _train(config.num_epochs, data_loaders, model, optimizer, loss_func, model_save_path)
+
+    # finish wandb session
+    wandb.finish()
 
 
 # helper for computing metrics

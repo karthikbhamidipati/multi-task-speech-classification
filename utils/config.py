@@ -35,7 +35,7 @@ PROJECT_NAME = "multitask-audio-classification"
 HYPER_PARAMETERS = {
     'beta': 0.001,  # loss weighting parameter
     'num_epochs': 50,  # number of epochs
-    'batch_size': 512,  # batch size
+    'batch_size': 384,  # batch size
     'learning_rate': 0.001,  # learning rate
     'feature_type': 'mfcc',  # feature_type (mfcc or mel-spectrogram)
     'use_class_weights': False,  # use class weights for loss
@@ -47,6 +47,6 @@ MODELS = {
     "simple_cnn": ("CNN Baseline", simple_cnn),
     "resnet18": ("CNN ResNet18", resnet18),
     "resnet34": ("CNN ResNet34", resnet34),
-    "resnet50": ("CNN ResNet34", resnet50),
-    "resnet101": ("CNN ResNet34", resnet101)
+    "resnet50": ("CNN ResNet50", resnet50),
+    "resnet101": ("CNN ResNet101", resnet101)
 }
