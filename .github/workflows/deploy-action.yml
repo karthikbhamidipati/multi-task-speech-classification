@@ -8,8 +8,8 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Creating Known Hosts
-        run: touch ~/.ssh/known_hosts
+      - name: Creating ssh directory
+        run: mkdir -p .ssh
       - name: Adding Known Hosts
         run: ssh-keyscan -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
       - name: Install SSH Key
