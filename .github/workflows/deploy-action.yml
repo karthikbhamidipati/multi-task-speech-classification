@@ -1,0 +1,19 @@
+name: deploy-to-server
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Adding Known Hosts
+        run: ssh-keyscan -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
+      - name: Install SSH Key
+        uses: shimataro/ssh-key-action@v2
+        with:
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+      - name: Deploy with rsync
+        run: rsync -avz ./multi-task-speech-classification/ ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:${{ DEPLOY_DIR }}/multi-task-speech-classification
+
