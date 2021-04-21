@@ -2,7 +2,6 @@ import unittest
 
 import torch
 
-from models import run_device
 from models.resnet import resnet18, resnet34, resnet50, resnet101
 from models.simple_cnn import simple_cnn
 from utils.config import HYPER_PARAMETERS
