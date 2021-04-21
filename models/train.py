@@ -5,7 +5,8 @@ from pickle import load
 import numpy as np
 import wandb
 from sklearn.metrics import f1_score
-from torch import no_grad, save
+
+import torch
 from torch.nn import DataParallel
 from torch.optim import Adam
 
@@ -54,32 +55,7 @@ def _compute_metrics(predictions, targets):
     return metrics
 
 
-def _compute_loss_metrics(loader, optimizer, model, loss_func, training=False):
-    for batch_idx, (data, labels) in enumerate(loader, 1):
-        # move data, labels to device
-        data = data.to(run_device)
-        labels = [label.to(run_device) for label in labels]
-
-        if training:
-            # enable training forward pass, backward pass and update weights
-            model.train()
-            optimizer.zero_grad()
-            outputs = model(data)
-            loss = loss_func(outputs, labels)
-            loss.backward()
-            optimizer.step()
-        else:
-            # forward pass without grad to calculate the validation loss
-            model.eval()
-            with no_grad():
-                outputs = model(data)
-                loss = loss_func(outputs, labels)
-
-        # calculate loss and metrics
-        return loss.item(), _compute_metrics(outputs, labels)
-
-
-def _train(num_epochs, loaders, model, optimizer, loss_func, save_path, min_loss=np.Inf):
+def _train(num_epochs, loaders, model, optimizer, criterion, save_path, min_loss=np.Inf):
     """returns trained model"""
     # initialize tracker for minimum validation loss
     val_loss_min = min_loss
@@ -92,16 +68,38 @@ def _train(num_epochs, loaders, model, optimizer, loss_func, save_path, min_loss
         train_metrics, val_metrics = np.zeros(2), np.zeros(2)
 
         # training the model
-        running_loss, running_metrics = _compute_loss_metrics(loaders['train'], optimizer, model, loss_func,
-                                                              training=True)
-        train_loss += running_loss
-        train_metrics += running_metrics
+        model.train()
+        for batch_idx, (data, labels) in enumerate(loaders['train'], 1):
+            # move data, labels to run_device
+            data = data.to(run_device)
+            labels = [label.to(run_device) for label in labels]
+
+            # forward pass, backward pass and update weights
+            optimizer.zero_grad()
+            outputs = model(data)
+            loss = criterion(outputs, labels)
+            loss.backward()
+            optimizer.step()
+
+            # calculate training loss and metrics
+            train_loss += loss.item()
+            train_metrics += _compute_metrics(outputs, labels)
 
         # evaluating the model
-        running_loss, running_metrics = _compute_loss_metrics(loaders['train'], optimizer, model, loss_func,
-                                                              training=False)
-        val_loss += running_loss
-        val_metrics += running_metrics
+        model.eval()
+        for batch_idx, (data, labels) in enumerate(loaders['val'], 1):
+            # move data, labels to run_device
+            data = data.to(run_device)
+            labels = [label.to(run_device) for label in labels]
+
+            # forward pass without grad to calculate the validation loss
+            with torch.no_grad():
+                outputs = model(data)
+                loss = criterion(outputs, labels)
+
+            # calculate validation loss
+            val_loss += loss.item()
+            val_metrics += _compute_metrics(outputs, labels)
 
         # compute average loss and accuracy
         train_loss /= num_train_iters
@@ -111,21 +109,16 @@ def _train(num_epochs, loaders, model, optimizer, loss_func, save_path, min_loss
 
         # logging metrics to wandb
         wandb.log({'epoch': epoch, 'train_loss': train_loss, 'train_fscore_gender': train_metrics[0],
-                   'train_fscore_accent': train_metrics[1], 'val_loss': val_loss,
-                   'val_fscore_gender': val_metrics[0], 'val_fscore_accent': val_metrics[1]})
+                   'train_fscore_accent': train_metrics[1], 'val_loss': val_loss, 'val_fscore_gender': val_metrics[0],
+                   'val_fscore_accent': val_metrics[1]})
 
         # print training & validation statistics
-        print("Epoch: {}\tTraining Loss: {:.6f}\tTraining F-score: {}"
-              "\tValidation Loss: {:.6f}\tValidation F-score: {}"
-              .format(epoch, train_loss, train_metrics, val_loss, val_metrics))
+        print(
+            "Epoch: {}\tTraining Loss: {:.6f}\tTraining F-score: {}\tValidation Loss: {:.6f}\tValidation F-score: {}".format(
+                epoch, train_loss, train_metrics, val_loss, val_metrics))
 
         # saving the model when validation loss decreases
         if val_loss <= val_loss_min:
-            print("Validation loss decreased ({:.6f} --> {:.6f}).  Saving model ..."
-                  .format(val_loss_min, val_loss))
-
-            save(model.module, save_path)
+            print("Validation loss decreased ({:.6f} --> {:.6f}).  Saving model ...".format(val_loss_min, val_loss))
+            torch.save(model.module, save_path)
             val_loss_min = val_loss
-
-    # return trained model
-    return model

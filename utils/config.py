@@ -35,7 +35,7 @@ PROJECT_NAME = "multitask-audio-classification"
 HYPER_PARAMETERS = {
     'beta': 0.001,  # loss weighting parameter
     'num_epochs': 50,  # number of epochs
-    'batch_size': 384,  # batch size
+    'batch_size': 128,  # batch size
     'learning_rate': 0.001,  # learning rate
     'feature_type': 'mfcc',  # feature_type (mfcc or mel-spectrogram)
     'use_class_weights': False,  # use class weights for loss
