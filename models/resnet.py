@@ -7,40 +7,44 @@ class _ResNet(Module):
     def __init__(self, config, layers, block, inplanes=64, groups=1, norm_layer=BatchNorm2d):
         super(_ResNet, self).__init__()
 
+        # type checks
+        if type(layers) == list and len(layers) != 4 and all(map(lambda x: isinstance(x, int), layers)):
+            raise ValueError("layers should be a list of ints with size 4")
+        elif block not in (BasicBlock, Bottleneck):
+            raise ValueError("invalid block, possible values: <BasicBlock|Bottleneck>")
+
         # constants
         self.inplanes = inplanes
         self.base_width = inplanes
         self.groups = groups
         self.norm_layer = norm_layer
-
-        if type(layers) == list and len(layers) != 4 and all(map(lambda x: isinstance(x, int), layers)):
-            raise ValueError("layers should be a list of ints with size 4")
+        self.linear_units = 512 if block == BasicBlock else 2048
 
         # Initial convolutional layer
         self.conv = Sequential(
             Conv2d(1, self.inplanes, kernel_size=(7, 5), stride=(2, 1), padding=(3, 2), bias=False),
             self.norm_layer(self.inplanes),
             ReLU(inplace=True),
-            MaxPool2d(kernel_size=3, stride=2, padding=1)
+            MaxPool2d(kernel_size=(5, 3), stride=(2, 1), padding=(2, 1))
         )
 
         # Residual blocks
-        self.res1 = self._make_layer(block, self.inplanes, layers[0])
-        self.res2 = self._make_layer(block, self.inplanes * 2, layers[1], stride=2)
-        self.res3 = self._make_layer(block, self.inplanes * 4, layers[2], stride=2)
-        self.res4 = self._make_layer(block, self.inplanes * 8, layers[3], stride=2)
+        self.res1 = self._make_layer(block, 64, layers[0])
+        self.res2 = self._make_layer(block, 128, layers[1], stride=2)
+        self.res3 = self._make_layer(block, 256, layers[2], stride=2)
+        self.res4 = self._make_layer(block, 512, layers[3], stride=2)
 
         self.avg_pool = AdaptiveAvgPool2d((1, 1))
 
         # fully connected output layers
         self.gender_out = Sequential(
             Dropout(config.fc_dropout),
-            Linear(512, 3)
+            Linear(self.linear_units, 3)
         )
 
         self.accent_out = Sequential(
             Dropout(config.fc_dropout),
-            Linear(512, 16)
+            Linear(self.linear_units, 16)
         )
 
         # initialise the network's weights
