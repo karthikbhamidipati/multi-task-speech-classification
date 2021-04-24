@@ -1,5 +1,5 @@
 from torch.nn import Module, Sequential, Conv2d, BatchNorm2d, ReLU, MaxPool2d, Linear, Dropout, init, AdaptiveAvgPool2d, \
-    GroupNorm
+    GroupNorm, DataParallel
 from torchvision.models.resnet import BasicBlock, Bottleneck, conv1x1
 
 
@@ -114,16 +114,16 @@ class _ResNet(Module):
 
 
 def resnet18(config):
-    return _ResNet(config, [2, 2, 2, 2], block=BasicBlock)
+    return DataParallel(_ResNet(config, [2, 2, 2, 2], block=BasicBlock))
 
 
 def resnet34(config):
-    return _ResNet(config, [3, 4, 6, 3], block=BasicBlock)
+    return DataParallel(_ResNet(config, [3, 4, 6, 3], block=BasicBlock))
 
 
 def resnet50(config):
-    return _ResNet(config, [3, 4, 6, 3], block=Bottleneck)
+    return DataParallel(_ResNet(config, [3, 4, 6, 3], block=Bottleneck))
 
 
 def resnet101(config):
-    return _ResNet(config, [3, 4, 23, 3], block=Bottleneck)
+    return DataParallel(_ResNet(config, [3, 4, 23, 3], block=Bottleneck))

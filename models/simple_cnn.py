@@ -1,4 +1,4 @@
-from torch.nn import Module, Sequential, Conv2d, BatchNorm2d, ReLU, MaxPool2d, Linear, Dropout, init
+from torch.nn import Module, Sequential, Conv2d, BatchNorm2d, ReLU, MaxPool2d, Linear, Dropout, init, DataParallel
 
 
 class _SimpleCNNModel(Module):
@@ -87,4 +87,4 @@ class _SimpleCNNModel(Module):
 
 
 def simple_cnn(config):
-    return _SimpleCNNModel(config=config)
+    return DataParallel(_SimpleCNNModel(config=config))

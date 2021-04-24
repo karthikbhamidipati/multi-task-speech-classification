@@ -7,7 +7,6 @@ import wandb
 from sklearn.metrics import f1_score
 
 import torch
-from torch.nn import DataParallel
 from torch.optim import Adam
 
 from models import run_device
@@ -31,7 +30,7 @@ def train_model(root_dir, model_key):
     # get data_loaders, loss_func, model, optimizer
     data_loaders = get_data_loaders(features, config)
     loss_func = get_loss_function(config, features)
-    model = DataParallel(model_func(config)).to(run_device)
+    model = model_func(config).to(run_device)
     optimizer = Adam(model.parameters(), lr=config.learning_rate)
 
     # set wandb to watch model parameters
