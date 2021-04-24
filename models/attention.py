@@ -3,6 +3,8 @@ import torch
 import torch.nn.functional as F
 from torch import nn
 
+from models import run_device
+
 
 class Attention(nn.Module):
     def __init__(self, hidden_size, lengths, batch_first=False):
@@ -29,12 +31,12 @@ class Attention(nn.Module):
                             .permute(1, 0)  # (hidden_size, 1)
                             .unsqueeze(0)  # (1, hidden_size, 1)
                             .repeat(batch_size, 1, 1)  # (batch_size, hidden_size, 1)
-                            )
+                            ).to(run_device)
 
         attentions = torch.softmax(F.relu(weights.squeeze()), dim=-1)
 
         # create mask based on the sentence lengths
-        mask = torch.ones(attentions.size(), requires_grad=True)
+        mask = torch.ones(attentions.size(), requires_grad=True).to(run_device)
         for i, l in enumerate(self.lengths):  # skip the first sentence
             if l < max_len:
                 mask[i, l:] = 0
