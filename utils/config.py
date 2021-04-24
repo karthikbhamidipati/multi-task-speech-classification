@@ -1,6 +1,7 @@
 import multiprocessing
 from os.path import join
 
+from models.lstm import simple_lstm, bi_lstm, lstm_attention, bi_lstm_attention
 from models.resnet import resnet18, resnet34, resnet50, resnet101
 from models.simple_cnn import simple_cnn
 
@@ -39,7 +40,8 @@ HYPER_PARAMETERS = {
     'learning_rate': 0.001,  # learning rate
     'feature_type': 'mfcc',  # feature_type (mfcc or mel-spectrogram)
     'use_class_weights': False,  # use class weights for loss
-    'fc_dropout': 0.1  # dropout for fully connected layers
+    'fc_dropout': 0.1,  # dropout for fully connected layers
+    'lstm_dropout': 0.2  # dropout for lstm layers
 }
 
 # Model args
@@ -48,5 +50,9 @@ MODELS = {
     "resnet18": ("CNN ResNet18", resnet18),
     "resnet34": ("CNN ResNet34", resnet34),
     "resnet50": ("CNN ResNet50", resnet50),
-    "resnet101": ("CNN ResNet101", resnet101)
+    "resnet101": ("CNN ResNet101", resnet101),
+    "simple_lstm": ("LSTM Baseline", simple_lstm),
+    "bi_lstm": ("Bidirectional LSTM", bi_lstm),
+    "lstm_attention": ("Bidirectional LSTM", lstm_attention),
+    "bi_lstm_attention": ("Bidirectional LSTM with Attention", bi_lstm_attention)
 }
