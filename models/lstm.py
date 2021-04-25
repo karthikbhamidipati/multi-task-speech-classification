@@ -15,9 +15,6 @@ class _LSTMModel(Module):
         self.lstm = LSTM(64, hidden_size, n_layers, dropout=config.lstm_dropout, bidirectional=bidirectional)
 
         n_layers *= 2 if bidirectional else 1
-        self.hidden_cell = (autograd.Variable(torch.zeros(n_layers, 256, hidden_size)).to(run_device),
-                            autograd.Variable(torch.zeros(n_layers, 256, hidden_size).to(run_device)))
-
         hidden_size *= 2 if bidirectional else 1
 
         if attention:
@@ -41,7 +38,7 @@ class _LSTMModel(Module):
 
     def forward(self, x):
         # pass through lstm layers
-        x, self.hidden_cell = self.lstm(x, self.hidden_cell)
+        x, _ = self.lstm(x)
 
         if self.attention:
             x, _ = self.att_layer(x)
