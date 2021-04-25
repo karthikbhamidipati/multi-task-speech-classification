@@ -77,7 +77,7 @@ def _train(num_epochs, loaders, model, optimizer, criterion, save_path, min_loss
             optimizer.zero_grad()
             outputs = model(data)
             loss = criterion(outputs, labels)
-            loss.backward()
+            loss.backward(retain_graph=True)
             optimizer.step()
 
             # calculate training loss and metrics
