@@ -7,6 +7,7 @@ import wandb
 from sklearn.metrics import f1_score
 
 import torch
+from torch.nn import DataParallel
 from torch.optim import Adam
 
 from models import run_device
@@ -119,5 +120,5 @@ def _train(num_epochs, loaders, model, optimizer, criterion, save_path, min_loss
         # saving the model when validation loss decreases
         if val_loss <= val_loss_min:
             print("Validation loss decreased ({:.6f} --> {:.6f}).  Saving model ...".format(val_loss_min, val_loss))
-            torch.save(model.module, save_path)
+            torch.save(model.module if isinstance(model, DataParallel) else model, save_path)
             val_loss_min = val_loss
