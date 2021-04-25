@@ -1,4 +1,5 @@
 import torch
+from torch import autograd
 from torch.nn import Module, Sequential, LSTM, BatchNorm2d, Linear, Dropout, init, AdaptiveAvgPool2d
 
 from models import run_device
@@ -14,8 +15,8 @@ class _LSTMModel(Module):
         self.lstm = LSTM(64, hidden_size, n_layers, dropout=config.lstm_dropout, bidirectional=bidirectional)
 
         n_layers *= 2 if bidirectional else 1
-        self.hidden_cell = (torch.zeros(n_layers, 256, hidden_size).to(run_device),
-                            torch.zeros(n_layers, 256, hidden_size).to(run_device))
+        self.hidden_cell = (autograd.Variable(torch.zeros(n_layers, 256, hidden_size)).to(run_device),
+                            autograd.Variable(torch.zeros(n_layers, 256, hidden_size).to(run_device)))
 
         hidden_size *= 2 if bidirectional else 1
 
