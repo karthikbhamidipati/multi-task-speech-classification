@@ -53,6 +53,6 @@ MODELS = {
     "resnet101": ("CNN ResNet101", resnet101),
     "simple_lstm": ("LSTM Baseline", simple_lstm),
     "bi_lstm": ("Bidirectional LSTM", bi_lstm),
-    "lstm_attention": ("Bidirectional LSTM", lstm_attention),
+    "lstm_attention": ("LSTM with attention", lstm_attention),
     "bi_lstm_attention": ("Bidirectional LSTM with Attention", bi_lstm_attention)
 }
