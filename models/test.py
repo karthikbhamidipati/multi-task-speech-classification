@@ -1,6 +1,7 @@
 from _pickle import load
 from os.path import join
 
+import numpy as np
 import torch
 
 from models import run_device
@@ -12,7 +13,7 @@ from utils.config import FEATURES_PATH, MODELS, HYPER_PARAMETERS
 
 
 def _test(model, test_loader, criterion):
-    test_loss, test_metrics = 0, 0
+    test_loss, test_metrics = 0.0, np.zeros(2)
     for data, labels in test_loader:
         # move data, labels to run_device
         data = data.to(run_device)
