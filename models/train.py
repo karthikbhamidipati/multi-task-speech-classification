@@ -46,7 +46,7 @@ def train_model(root_dir, model_key):
 
 
 # helper for computing metrics
-def _compute_metrics(predictions, targets):
+def compute_metrics(predictions, targets):
     metrics = []
     for prediction, target in zip(predictions, targets):
         prediction = prediction.argmax(dim=1).cpu().numpy()
@@ -69,7 +69,7 @@ def _train(num_epochs, loaders, model, optimizer, criterion, save_path, min_loss
 
         # training the model
         model.train()
-        for batch_idx, (data, labels) in enumerate(loaders['train'], 1):
+        for data, labels in loaders['train']:
             # move data, labels to run_device
             data = data.to(run_device)
             labels = [label.to(run_device) for label in labels]
@@ -83,11 +83,11 @@ def _train(num_epochs, loaders, model, optimizer, criterion, save_path, min_loss
 
             # calculate training loss and metrics
             train_loss += loss.item()
-            train_metrics += _compute_metrics(outputs, labels)
+            train_metrics += compute_metrics(outputs, labels)
 
         # evaluating the model
         model.eval()
-        for batch_idx, (data, labels) in enumerate(loaders['val'], 1):
+        for data, labels in loaders['val']:
             # move data, labels to run_device
             data = data.to(run_device)
             labels = [label.to(run_device) for label in labels]
@@ -99,7 +99,7 @@ def _train(num_epochs, loaders, model, optimizer, criterion, save_path, min_loss
 
             # calculate validation loss
             val_loss += loss.item()
-            val_metrics += _compute_metrics(outputs, labels)
+            val_metrics += compute_metrics(outputs, labels)
 
         # compute average loss and accuracy
         train_loss /= num_train_iters

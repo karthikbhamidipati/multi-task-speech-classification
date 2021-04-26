@@ -1,8 +1,5 @@
-import torch
-from torch import autograd
 from torch.nn import Module, Sequential, LSTM, BatchNorm2d, Linear, Dropout, init, AdaptiveAvgPool2d
 
-from models import run_device
 from models.attention import Attention
 
 

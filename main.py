@@ -1,5 +1,6 @@
 from argparse import ArgumentParser
 
+from models.test import test_model
 from models.train import train_model
 from utils.preprocess import preprocess, extract_features
 
@@ -35,7 +36,16 @@ def main():
     training_parser.add_argument("-r", "--root-dir", dest="root_dir", required=True,
                                  help="root directory of the common voice dataset")
     training_parser.add_argument("-m", "--model-name", dest="model_key", required=True,
-                                 help="root directory of the common voice dataset")
+                                 help="key to determine the model to be trained")
+
+    # args for testing
+    test_parser = action_parser.add_parser("test", help="Test the model")
+    test_parser.add_argument("-r", "--root-dir", dest="root_dir", required=True,
+                             help="root directory of the common voice dataset")
+    test_parser.add_argument("-m", "--model-name", dest="model_key", required=True,
+                             help="key to determine the model to be tested")
+    test_parser.add_argument("-c", "--checkpoint-dir", dest="checkpoint_path", required=True,
+                             help="root directory of the saved models")
 
     action, args = clean_args(parser.parse_args())
 
@@ -45,6 +55,8 @@ def main():
         extract_features(**args)
     elif action == 'train':
         train_model(**args)
+    elif action == 'test':
+        test_model(**args)
 
 
 if __name__ == '__main__':
