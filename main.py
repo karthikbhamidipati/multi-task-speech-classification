@@ -1,5 +1,6 @@
 from argparse import ArgumentParser
 
+from models.inference import inference
 from models.test import test_model
 from models.train import train_model
 from utils.preprocess import preprocess, extract_features
@@ -47,6 +48,13 @@ def main():
     test_parser.add_argument("-c", "--checkpoint-dir", dest="checkpoint_path", required=True,
                              help="root directory of the saved models")
 
+    # args for inference
+    inference_parser = action_parser.add_parser("inference", help="Run inference on the model")
+    inference_parser.add_argument("-r", "--root-dir", dest="root_dir", required=True,
+                                  help="root directory of the audio files")
+    inference_parser.add_argument("-m", "--model-path", dest="model_path", required=True,
+                                  help="path of the model")
+
     action, args = clean_args(parser.parse_args())
 
     if action == 'preprocess':
@@ -57,6 +65,8 @@ def main():
         train_model(**args)
     elif action == 'test':
         test_model(**args)
+    elif action == 'inference':
+        inference(**args)
 
 
 if __name__ == '__main__':

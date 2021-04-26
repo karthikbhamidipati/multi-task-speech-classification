@@ -56,3 +56,7 @@ MODELS = {
     "lstm_attention": ("LSTM with attention", lstm_attention),
     "bi_lstm_attention": ("Bidirectional LSTM with Attention", bi_lstm_attention)
 }
+
+GENDER_CLASSES = ['female', 'male', 'other']
+ACCENT_CLASSES = ['african', 'australia', 'bermuda', 'canada', 'england', 'hongkong', 'indian', 'ireland', 'malaysia',
+                  'newzealand', 'philippines', 'scotland', 'singapore', 'southatlandtic', 'us', 'wales']

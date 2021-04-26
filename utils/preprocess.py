@@ -40,10 +40,10 @@ def _clean_features(features):
     return features[:MAX_TIME_LEN]
 
 
-def _extract_features(root_dir, row):
+def extract_audio_features(root_dir, row):
     raw_data_dir = join(root_dir, RAW_DATA_DIR)
     row_dict = row.to_dict()
-    waveform, _ = load(raw_data_dir + row['filename'], sr=FEATURE_ARGS['sr'])
+    waveform, _ = load(raw_data_dir + row_dict['filename'], sr=FEATURE_ARGS['sr'])
     row_dict['melspec'] = _clean_features(melspectrogram(waveform, n_mels=EXTRACTOR_ARGS['n_mels'], **FEATURE_ARGS))
     row_dict['mfcc'] = _clean_features(mfcc(waveform, n_mfcc=EXTRACTOR_ARGS['n_mfcc'], **FEATURE_ARGS))
     return row_dict
@@ -51,7 +51,7 @@ def _extract_features(root_dir, row):
 
 def _get_features(root_dir, df):
     job = Parallel(n_jobs=NUM_CORES)
-    return job(delayed(_extract_features)(root_dir, row)
+    return job(delayed(extract_audio_features)(root_dir, row)
                for index, row in tqdm(df.iterrows(), total=df.shape[0]))
 
 

@@ -56,7 +56,7 @@ def test(checkpoint_path, model_key, test_loader, criterion):
 
 
 def test_model(root_dir, model_key, checkpoint_path):
-    features = load(open(join(root_dir, FEATURES_PATH), 'rb'))
+    features = load(open(join("A:/Data/Audio/common-voice", "pre_processed_data", "common_voice_features.pkl"), 'rb'))
     _, model_func = MODELS[model_key]
     config = Config(HYPER_PARAMETERS)
 
@@ -76,7 +76,9 @@ def test_model(root_dir, model_key, checkpoint_path):
 
 def plot_confusion_matrix(ground_truth, predictions, display_labels, fig_name):
     cm = confusion_matrix(ground_truth, predictions)
+    fig, ax = plt.subplots(figsize=(15, 15))
+
     display = ConfusionMatrixDisplay(confusion_matrix=cm,
                                      display_labels=display_labels)
-    display.plot()
+    display.plot(ax=ax, xticks_rotation='vertical')
     plt.savefig("figures/" + fig_name + ".png")
