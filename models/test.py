@@ -1,4 +1,5 @@
 from _pickle import load
+from math import ceil
 from os.path import join
 
 import numpy as np
@@ -14,6 +15,10 @@ from utils.config import FEATURES_PATH, MODELS, HYPER_PARAMETERS
 
 def _test(model, test_loader, criterion):
     test_loss, test_metrics = 0.0, np.zeros(2)
+
+    num_test_iters = ceil(len(test_loader.dataset) / test_loader.batch_size)
+
+    model.eval()
     for data, labels in test_loader:
         # move data, labels to run_device
         data = data.to(run_device)
@@ -29,7 +34,7 @@ def _test(model, test_loader, criterion):
         test_metrics += compute_metrics(outputs, labels)
 
     print("Test Loss: {}, Test Metrics: {}"
-          .format(test_loss, test_metrics))
+          .format(test_loss / num_test_iters, test_metrics / num_test_iters))
 
 
 def test_model(root_dir, model_key, checkpoint_path):
