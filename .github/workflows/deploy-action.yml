@@ -10,10 +10,6 @@ jobs:
     steps:
       - name: Checkout the main branch
         uses: actions/checkout@v2
-      - name: Creating ssh directory
-        run: mkdir -p ~/.ssh
-      - name: Adding Known Hosts
-        run: ssh-keyscan -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
       - name: Install SSH Key
         uses: shimataro/ssh-key-action@v2
         with:
