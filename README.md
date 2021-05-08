@@ -1,5 +1,6 @@
 # multi-task-speech-classification
 Multi-Task Speech classification of accent and gender of an english speaker on [Mozilla's common voice dataset](https://www.kaggle.com/mozillaorg/common-voice).
+Paper can be found [here](200420608-Multi_task_speech_classification.pdf)
 
 # Run instructions
 1. To `preprocess` the audio data, run 
