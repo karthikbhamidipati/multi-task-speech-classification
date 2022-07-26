@@ -3,7 +3,7 @@ librosa~=0.8.0
 joblib~=1.0.1
 tqdm~=4.56.0
 scikit-learn~=0.24.1
-numpy~=1.19.2
+numpy>=1.22.0
 wandb~=0.10.26
 parameterized~=0.8.1
 --find-links https://download.pytorch.org/whl/torch_stable.html
