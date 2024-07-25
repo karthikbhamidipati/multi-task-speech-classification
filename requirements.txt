@@ -7,5 +7,5 @@ numpy>=1.22.0
 wandb~=0.10.26
 parameterized~=0.8.1
 --find-links https://download.pytorch.org/whl/torch_stable.html
-torch==1.13.1
+torch==2.2.0
 torchvision==0.8.2+cu101
